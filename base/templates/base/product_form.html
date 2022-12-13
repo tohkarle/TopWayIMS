@@ -1,0 +1,282 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% if 'create-product' in request.path %}
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <header class="bg-white shadow dark:shadow-gray-800 dark:bg-gray-900">
+            <div class="flex justify-between items-center mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-8">
+                <h1 class="flex text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Create Product</h1>
+                <div>
+                    <a href="{% url 'products' %}">
+                        <button type="button" class="inline-flex items-center text-blue-800 border border-blue-700 hover:ring-1 hover:ring-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-base px-3 sm:px-5 py-2.5 text-center mr-2 dark:border-white dark:text-white dark:hover:ring-white dark:focus:ring-white dark:hover:ring-1 dark:focus:ring-2">
+                            <svg class="mr-0 ml-0 w-5 h-5 sm:mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            <span class="hidden sm:inline-flex">Go Back</span>
+                        </button>
+                    </a>
+                    <button type="submit" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-4 sm:px-5 py-3 text-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="mr-0 ml-0 w-5 h-5 sm:mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="hidden sm:inline-flex">Create Product</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-7xl py-6 lg:px-8 my-6">
+                <div class="grid grid-cols-1 mb-6 lg:grid-cols-5 gap-6">
+                    <div class="col-span-3">
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Number</label>
+                                <input type="text" name="number" id="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                            </div>
+                            <div>
+                                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Description</label>
+                                <input type="text" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder=""required>
+                            </div>
+                            <div>
+                                <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit Cost Price</label>
+                                <input type="number" name="cost_price" id="cost_price" min="0" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0.00" required>
+                            </div>
+                            <div>
+                                <label for="selling_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit Selling Price</label>
+                                <input type="number" name="selling_price" id="selling_price" min="0" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0.00" required>
+                            </div>
+                            <div>
+                                <label for="unit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit</label>
+                                <input type="text" name="unit" id="unit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                            </div>
+                            <div>
+                                <label for="skip_counter" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skip Counter</label>
+                                <select id="skip_counter" name="skip_counter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected value="False">No</option>
+                                    <option value="True">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <div>
+                                <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier</label>
+                                <select id="supplier" name="supplier" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    {% for supplier in suppliers %}
+                                        {% if forloop.first %}
+                                            <option selected value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                        {% else %}
+                                            <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div> 
+                        <div class="mb-6">
+                            <label for="photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo</label>
+                            <input id="photo" type="file" accept="image/*" name="photo" class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="photo">
+                        </div> 
+                        <div class="mb-6">
+                            <label for="color_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Color Code</label>
+                            <div class="flex flex-wrap">
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="blue" name="color_code" value="blue" class="hidden peer">
+                                    <label for="blue" class="bg-blue-300 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 cursor-pointer dark:hover:text-gray-300  dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="lightorange" name="color_code" value="lightorange" class="hidden peer">
+                                    <label for="lightorange" class="bg-orange-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="lightblue" name="color_code" value="lightblue" class="hidden peer">
+                                    <label for="lightblue" class="bg-blue-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="yellow" name="color_code" value="yellow" class="hidden peer">
+                                    <label for="yellow" class="bg-yellow-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="red" name="color_code" value="red" class="hidden peer">
+                                    <label for="red" class="bg-red-300 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="lightred" name="color_code" value="lightred" class="hidden peer">
+                                    <label for="lightred" class="bg-red-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="green" name="color_code" value="green" class="hidden peer">
+                                    <label for="green" class="bg-green-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="gray" name="color_code" value="gray" class="hidden peer">
+                                    <label for="gray" class="bg-gray-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="lightblue2" name="color_code" value="lightblue2" class="hidden peer">
+                                    <label for="lightblue2" class="bg-blue-100 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                                <div class="flex items-center mr-4">
+                                    <input type="radio" id="white" name="color_code" value="white" class="hidden peer">
+                                    <label for="white" class="bg-white inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                    </label>
+                                </div>
+                            </div>
+                        </div> 
+                        <button type="submit" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-3 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Create Product
+                        </button>
+                    </div>
+                    <div class="col-span-2">
+                        <!-- Cards go here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+{% elif 'update-product' in request.path %}
+    <form method="post" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <header class="bg-white shadow dark:shadow-gray-800 dark:bg-gray-900">
+            <div class="flex justify-between items-center mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-8">
+                <h1 class="flex text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Update Product</h1>
+                <div>
+                    <a href="{% url 'products' %}">
+                        <button type="button" class="inline-flex items-center text-blue-800 border border-blue-700 hover:ring-1 hover:ring-blue-500 focus:ring-1 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-base px-3 sm:px-5 py-2.5 text-center mr-2 dark:border-white dark:text-white dark:hover:ring-white dark:focus:ring-white dark:hover:ring-1 dark:focus:ring-2">
+                            <svg class="mr-0 sm:mr-2 ml-0 sm:-ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            <span class="hidden sm:inline-flex">Go Back</span>
+                        </button>
+                    </a>
+                    <button type="submit" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-4 sm:px-5 py-3 text-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="mr-0 sm:mr-2 ml-0 sm:-ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="hidden sm:inline-flex">Update Product</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="mx-auto max-w-7xl py-6 lg:px-8 my-6">
+                <div class="grid grid-cols-1 mb-6 lg:grid-cols-5 gap-6">
+                    <div class="col-span-3">
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Number</label>
+                            <input value="{{product.number}}" type="text" name="number" id="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                        </div>
+                        <div>
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Description</label>
+                            <input value="{{product.description}}" type="text" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                        </div>
+                        <div>
+                            <label for="cost_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit Cost Price</label>
+                            <input value="{{product.cost_price}}" type="number" name="cost_price" id="cost_price" min="0" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0.00" required>
+                        </div>
+                        <div>
+                            <label for="selling_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit Selling Price</label>
+                            <input value="{{product.selling_price}}" type="number" name="selling_price" id="selling_price" min="0" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0.00" required>
+                        </div>
+                        <div>
+                            <label for="unit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit</label>
+                            <input value="{{product.unit}}" type="text" name="unit" id="unit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+                        </div>
+                        <div>
+                            <label for="skip_counter" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Skip Counter</label>
+                            <select id="skip_counter" name="skip_counter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                {% if product.skip_counter == False %}
+                                    <option selected value="False">No</option>
+                                    <option value="True">Yes</option>
+                                {% else %}
+                                    <option selected value="True">Yes</option>
+                                    <option value="False">No</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <div>
+                            <label for="supplier" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Supplier</label>
+                            <select id="supplier" name="supplier" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                {% for supplier in suppliers %}
+                                    <option value="{{ supplier.id }}" {% if supplier.name == selected_supplier %}selected{% endif %}>{{ supplier.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div> 
+                    <div class="mb-6">
+                        <label for="photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo</label>
+                        <img src="{{ product.photo.url }}" class="w-20 h-20 my-6"/>
+                        <input id="photo" type="file" accept="image/*" name="photo" class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="photo">
+                    </div> 
+                    <div class="mb-6">
+                        <label for="color_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Color Code</label>
+                        <div class="flex flex-wrap">
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="blue" name="color_code" value="blue" class="hidden peer">
+                                <label for="blue" class="bg-blue-300 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 cursor-pointer dark:hover:text-gray-300  dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="lightorange" name="color_code" value="lightorange" class="hidden peer">
+                                <label for="lightorange" class="bg-orange-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="lightblue" name="color_code" value="lightblue" class="hidden peer">
+                                <label for="lightblue" class="bg-blue-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="yellow" name="color_code" value="yellow" class="hidden peer">
+                                <label for="yellow" class="bg-yellow-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="red" name="color_code" value="red" class="hidden peer">
+                                <label for="red" class="bg-red-300 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="lightred" name="color_code" value="lightred" class="hidden peer">
+                                <label for="lightred" class="bg-red-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="green" name="color_code" value="green" class="hidden peer">
+                                <label for="green" class="bg-green-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="gray" name="color_code" value="gray" class="hidden peer">
+                                <label for="gray" class="bg-gray-200 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="lightblue2" name="color_code" value="lightblue2" class="hidden peer">
+                                <label for="lightblue2" class="bg-blue-100 inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                            <div class="flex items-center mr-4">
+                                <input type="radio" id="white" name="color_code" value="white" class="hidden peer">
+                                <label for="white" class="bg-white inline-flex justify-between items-center p-5 w-full text-gray-500 rounded-lg border-0 peer-checked:border-4 border-gray-200 cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+                                </label>
+                            </div>
+                        </div>
+                    </div> 
+                    <button type="submit" class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-3 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Update Product
+                    </button>
+                </div>
+            </div>
+        </main>
+    </form>
+    <script>
+        document.getElementById('{{ product.color_code }}').checked = true;
+    </script>
+{% endif %}
+{% endblock %}
