@@ -10,8 +10,6 @@ from .forms import ProductForm, SignUpForm
 from django.db.models.query import QuerySet
 
 
-
-
 # Create your views here.
 
 
@@ -138,10 +136,6 @@ def home(request):
 #         'searched' : searched
 #     }
 #     return render(request, 'base/products.html', context)
-
-
-
-
 
 
 
