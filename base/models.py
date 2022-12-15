@@ -17,7 +17,7 @@ class User(AbstractUser):
 
 
 class Product(models.Model):
-    number = models.CharField(max_length=255)
+    number = models.CharField(unique=True, max_length=255)
     description = models.TextField()
     cost_price = models.DecimalField(max_digits=5, decimal_places=2)
     selling_price = models.DecimalField(max_digits=5, decimal_places=2)

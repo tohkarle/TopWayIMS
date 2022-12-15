@@ -10,5 +10,4 @@ urlpatterns = [
     path('products/', views.productsPage, name='products'),
     path('create-product/', views.createProduct, name='create-product'),
     path('update-product/<str:pk>/', views.updateProduct, name='update-product'),
-    path('delete-product/<str:pk>/', views.deleteProduct, name='delete-product'),
 ]

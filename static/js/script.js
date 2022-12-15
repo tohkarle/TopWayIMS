@@ -1,25 +1,25 @@
-// Upon entering 'Item Maintenance' page, assign events to search input on keyup; previous, page and next buttons on click
+// Upon entering 'Item Maintenance' page, assign events to search input on keyup; previous, page and next buttons on click.
 assignEvents(1);
 
 
-// Render the table according to the response from views.py
+// Render the table according to the response from views.py.
 function renderTable(q, object_list, suppliers, page_range, number, total_number) {
-
-    // Remove all existing table rows and populate with required table rows
     populateTableRows(object_list, suppliers);
-
-    // Remove all existing pagination buttons and populate with required pagination buttons
-    populatePagination(q, page_range, number, total_number)
-
-    // Assign events for the newly rendered table: search input on keyup; previous, page and next buttons on click
+    populatePagination(q, page_range, number, total_number);
     assignEvents(number, total_number);
 }
 
 
-// Function for assigning events to search input on keyup; previous, page and next buttons on click
-function assignEvents(number, total_number) {
+// For storing sorting values.
+var sortValue = null;
 
-    // Automatically send the input value to views.py and render the table rows after user stops typing for 500ms
+
+// Function for assigning events to search input on keyup; previous, page and next buttons on click.
+function assignEvents(number, total_number) {
+    console.log(number)
+    console.log(total_number)
+
+    // Automatically send the input value to views.py and render the table rows after user stops typing for 500ms.
     let searchField = document.getElementById('q');
     searchField.addEventListener('keyup', function(event) {
         setTimeout(function() {
@@ -27,45 +27,91 @@ function assignEvents(number, total_number) {
         }, 500);    // Set to 500ms
         });
 
-    // On page button click, table is re-rendered to display the required page of the searched value
+    // On page button click, table is re-rendered to display the required page of the searched value.
     let paginationButtons = document.getElementsByName('page');
-    for (const button of paginationButtons) {
-        if (number == button.value) {    // Highlight the current page button
-            button.setAttribute('aria-current', 'page');
-            button.className ="z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
+    for (const paginationButton of paginationButtons) {
+        if (number == paginationButton.value) {    // Highlight the current page button.
+            paginationButton.setAttribute('aria-current', 'page');
+            paginationButton.className ="z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
         }
-        button.addEventListener('click', function(event) {
-            autoAjaxRequest(searchField.value, button.value);
+        paginationButton.addEventListener('click', function(event) {
+            autoAjaxRequest(searchField.value, paginationButton.value);
         });
     }
 
-    // On previous button click, table is re-rendered to display the previous page of the searched value
+    // On previous button click, table is re-rendered to display the previous page of the searched value.
     let previousButton = document.getElementById('previous-button');
     let previous_page = number - 1;
-    if (number == 1) {    // Disable the previous button if user is on first page
+    if (number == 1) {    // Disable the previous button if user is on first page.
         previousButton.disabled = true;
-        previousButton.className = "block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
+        previousButton.className = "block py-2 px-3 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
     } else {
         previousButton.addEventListener('click', function(event) {
             autoAjaxRequest(searchField.value, previous_page);
-        })
+        });
     }
 
-    // On next button click, table is re-rendered to display the next page of the searched value
+    // On next button click, table is re-rendered to display the next page of the searched value.
     let nextButton = document.getElementById('next-button');
     let next_page = number + 1;
-    if (number == total_number) {    // Disable the next button if user is on last page
+    if (number == total_number) {    // Disable the next button if user is on last page.
         nextButton.disabled = true;
-        nextButton.className = "block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
+        nextButton.className = "block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400";
     } else {
         nextButton.addEventListener('click', function(event) {
             autoAjaxRequest(searchField.value, next_page);
-        })
+        });
     }
+
+    // On delete button click, the product is deleted.
+    let deleteButtons = document.getElementsByName('delete-button');
+    for (const deleteButton of deleteButtons) {
+        deleteButton.addEventListener('click', function(event) {
+            if (confirm("Are you sure you want to delete "+deleteButton.value+"?") == true) {
+                autoAjaxRequest(searchField.value, number, [deleteButton.value]);
+            }
+        });
+    }
+
+    // On delete selected button click, the selected product(s) are deleted.
+    let checkProducts = document.getElementsByName('check-product');
+    let delete_products = [];
+    $('#delete-selected-button').unbind('click').bind('click', function() {
+        for (const checkProduct of checkProducts) {
+            if (checkProduct.checked) {
+                delete_products.push(checkProduct.value);
+            }
+        }
+        if (confirm("Are you sure you want to delete selected product(s)?") == true) {
+            autoAjaxRequest(searchField.value, number, delete_products);
+        }
+    })
+
+    // Check all button checks all checkboxes in the same page.
+    let checkAllProduct = document.getElementById('check-all-product');
+    checkAllProduct.addEventListener('click', function() {
+        for (const checkProduct of checkProducts) {
+            if (checkAllProduct.checked) { checkProduct.checked = true; }
+            else { checkProduct.checked = false; }
+        }
+    });
+
+    // Check-all-product button is unchecked by default.
+    checkAllProduct.checked = false;
+
+    // Passing the sort-button value as the query string to views.py then sort products in backend.
+    $('.sort-button').unbind('click').bind('click', function() {
+        if (this.value === sortValue) {
+            sortValue = "-" + this.value;
+        } else {
+            sortValue = this.value;
+        }
+        autoAjaxRequest(searchField.value, number, "", sortValue);
+    });
 }
 
 
-// Function for removing all existing table rows and populate with new/required table rows
+// Function for removing all existing table rows and populate with new/required table rows.
 function populateTableRows(object_list, suppliers) {
     const tableBody = document.querySelector('#table-body');
     tableBody.innerHTML = ''; // clear the existing table rows
@@ -80,13 +126,13 @@ function populateTableRows(object_list, suppliers) {
         let div = document.createElement('div');
         div.setAttribute("class", "flex items-center");
         let input = document.createElement('input');
-        input.setAttribute("value", "{{ product.id }}");
+        input.setAttribute("value", obj[1]);
         input.setAttribute("name", "check-product");
-        input.setAttribute("id", "checkbox-table-search");
+        input.setAttribute("id", "check-product");
         input.setAttribute("type", "checkbox");
-        input.setAttribute("class", "w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600");
+        input.setAttribute("class", "check-product w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600");
         let label = document.createElement('label');
-        label.setAttribute("for", "checkbox-table-search");
+        label.setAttribute("for", "check-product");
         label.setAttribute("class", "sr-only");
         label.innerHTML = "checkbox";
         div.appendChild(input);
@@ -116,12 +162,12 @@ function populateTableRows(object_list, suppliers) {
 
         let col6 = document.createElement('td');
         col6.className = "py-4 px-6";
-        col6.innerText = obj[3];
+        col6.innerText = "$"+obj[3];
         row.appendChild(col6);
 
         let col7 = document.createElement('td');
         col7.className = "py-4 px-6";
-        col7.innerText = obj[4];
+        col7.innerText = "$"+obj[4];
         row.appendChild(col7);
 
         // Create edit icon button and delete icon button in column 8
@@ -146,15 +192,11 @@ function populateTableRows(object_list, suppliers) {
         path1.setAttribute("d", "M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z");
 
         // Create delete icon button
-        let a2 = document.createElement("a");
-        a2.addEventListener('click', function() {    // Pop up confirm message when clicked to confirm/cancel delete
-            if (confirm("Are you sure you want to delete"+obj[2]+"?") == true) {
-                a2.setAttribute("href", "http://127.0.0.1:8000/delete-product/"+obj[0]);
-            }
-        });
         let button2 = document.createElement("button");
         button2.setAttribute("type", "button");
         button2.setAttribute("class", "mr-3 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2");
+        button2.setAttribute("name", "delete-button");
+        button2.setAttribute("value", obj[1]);
         let svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg2.setAttribute("class", "w-5 h-5");
         svg2.setAttribute("fill", "none");
@@ -173,8 +215,9 @@ function populateTableRows(object_list, suppliers) {
         col8.appendChild(a1);
         svg2.appendChild(path2);
         button2.appendChild(svg2);
-        a2.appendChild(button2);
-        col8.appendChild(a2);
+        // a2.appendChild(button2);
+        // col8.appendChild(a2);
+        col8.appendChild(button2);
         row.appendChild(col8);
 
         // Lastly, append the entire row to the table body
@@ -183,7 +226,7 @@ function populateTableRows(object_list, suppliers) {
 }
 
 
-// Function for removing all existing pagination buttons and populate with new/required pagination buttons
+// Function for removing all existing pagination buttons and populate with new/required pagination buttons.
 function populatePagination(q, page_range, number, total_number) {
     const paginationBody = document.querySelector('#pagination-controls');
     paginationBody.className = "flex justify-between items-center pt-4",
@@ -215,8 +258,9 @@ function populatePagination(q, page_range, number, total_number) {
 
     // Create a previous button
     let previousButton = document.createElement('button');
+    previousButton.setAttribute("type", "button");
     previousButton.id = 'previous-button';
-    previousButton.className = 'block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white';
+    previousButton.className = 'block py-2 px-3 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white';
     let srOnly1 = document.createElement('span');
     srOnly1.className = 'sr-only';
     srOnly1.innerText = 'Previous';
@@ -252,6 +296,7 @@ function populatePagination(q, page_range, number, total_number) {
 
     // Create next button.
     let nextButton = document.createElement('button');
+    nextButton.setAttribute("type", "button");
     nextButton.id = 'next-button';
     nextButton.className = 'block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white';
     let srOnly2 = document.createElement('span');
@@ -276,11 +321,20 @@ function populatePagination(q, page_range, number, total_number) {
 }
 
 
-// Function that takes in query strings 'q' and 'page', and send it to backend using AJAX
-function autoAjaxRequest(q, page) {
+// Function that takes in query strings 'q' and 'page', and send it to backend using AJAX.
+function autoAjaxRequest(q, page, d, s) {
+    console.log(d);
     $.ajax({
-        url: `http://127.0.0.1:8000/products/?q=`+q+'&page='+page,
+        // url: `http://127.0.0.1:8000/products/?q=`+q+'&page='+page+'&delete='+d,
+        url: `http://127.0.0.1:8000/products/`,
+        data: {
+            "q": q,
+            "page": page,
+            "delete": d,
+            "sort" : s
+        },
         method: "GET",
+        traditional: true,
         success: function(response) {
             renderTable(q,
                 response.object_list,
